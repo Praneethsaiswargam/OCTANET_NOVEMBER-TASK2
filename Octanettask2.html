@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #515e6f;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        main {
+            max-width: 800px; /* Increase the max-width */
+            margin: 20px auto;
+        }
+
+        .task-container {
+            background-color: #f6f4ed;
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 20px; /* Add padding for spacing */
+        }
+
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .task {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .task:hover {
+            background-color: rgb(187, 222, 235);
+        }
+
+        .task input {
+            margin-right: 10px;
+            width: 20px; /* Increase the width */
+            height: 20px; /* Increase the height */
+        }
+
+        .task-text {
+            flex-grow: 1;
+        }
+
+        .completed {
+            text-decoration: line-through;
+        }
+
+        .selected {
+            background-color: #bdccdf; /* Change this color as needed */
+        }
+
+        .delete-button {
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 60%;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            margin-top: 5px;
+            font-size: small;
+            font-weight: bold;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>To-Do List</h1>
+    </header>
+
+    <main>
+        <div class="task-container">
+            <input type="text" id="newTask" placeholder="Enter new task">
+            <button onclick="addTask()">Add Task</button>
+            <div class="error-message" id="errorMessage"></div>
+
+            <ul class="task-list">
+                <li class="task">
+                    <input type="checkbox" onclick="toggleTask(this)">
+                    <div class="task-text" onclick="selectTask(this)">Book Airline</div>
+                    <button class="delete-button" onclick="deleteTask(this)">Delete</button>
+                </li>
+                <!-- Repeat the pattern for other tasks -->
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        function toggleTask(checkbox) {
+            const taskText = checkbox.parentNode.querySelector('.task-text');
+            taskText.classList.toggle('completed', checkbox.checked);
+            const task = checkbox.parentNode;
+            task.classList.toggle('selected', checkbox.checked);
+        }
+
+        function addTask() {
+            const newTaskInput = document.getElementById('newTask');
+            const taskList = document.querySelector('.task-list');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (newTaskInput.value.trim() !== '') {
+                const existingTasks = Array.from(taskList.children)
+                    .map(task => task.querySelector('.task-text').textContent.toLowerCase());
+
+                if (!existingTasks.includes(newTaskInput.value.trim().toLowerCase())) {
+                    const newTask = document.createElement('li');
+                    newTask.className = 'task';
+                    newTask.innerHTML = `
+                        <input type="checkbox" onclick="toggleTask(this)">
+                        <div class="task-text" onclick="selectTask(this)">${newTaskInput.value}</div>
+                        <button class="delete-button" onclick="deleteTask(this)">Delete</button>
+                    `;
+                    taskList.appendChild(newTask);
+                    newTaskInput.value = ''; // Clear the input field
+                    errorMessage.textContent = ''; // Clear the error message
+                } else {
+                    errorMessage.textContent = 'Task already exists!';
+                }
+            } else {
+                errorMessage.textContent = '*Enter a task!';
+            }
+        }
+
+        function selectTask(task) {
+            // Do nothing when the task text is clicked
+        }
+
+        function deleteTask(button) {
+            const task = button.parentNode;
+            task.remove();
+        }
+    </script>
+
+</body>
+</html>
